@@ -75,7 +75,7 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
         else:
             phản_hồi = "nhập đúng cú pháp đi!!! ví dụ: bảng cửu chương 7"
     #câu 4
-        elif "tiền" in low or "excel" in low or "biểu đồ" in low:
+    elif "tiền" in low or "excel" in low or "biểu đồ" in low:
         if df is not None:
             if "biểu đồ" in low:
                 fig, ax  = plt.subplots()
@@ -99,6 +99,7 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
     st.session_state.messages.append({"role": "assistant", "content": phản_hồi})
     if phản_hồi_biểu_đồ:
         pass
+
 
 
 
