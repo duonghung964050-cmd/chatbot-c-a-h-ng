@@ -75,43 +75,22 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
         else:
             phản_hồi = "nhập đúng cú pháp đi!!! ví dụ: bảng cửu chương 7"
     #câu 4
-    elif "biểu đồ" in low or "tiền" in low or "excel" in low:
-        if "biểu đồ" in low:
-            fig, ax = plt.subplots()
-
-    # chuẩn hoá tên cột
-            df.columns = df.columns.str.strip().str.lower()
-
-            if "loại tiêu tiền" not in df.columns or "tiền" not in df.columns:
-                phản_hồi = (
-                        " File Excel thiếu cột bắt buộc.\n\n"
-                        "Cần có 2 cột:\n"
-                        "- loại tiêu tiền\n"
-                        "- tiền"
-                )
+        elif "tiền" in low or "excel" in low or "biểu đồ" in low:
+        if df is not None:
+            if "biểu đồ" in low:
+                fig, ax  = plt.subplots()
+                try:
+                    ax.bar(df["loại tiêu tiền"], df ["tiền"],color = "red")
+                    ax.set_title("biểu đồ loại tiêu tiền")
+                    phản_hồi_biểu_đồ = fig
+                    phản_hồi = "đây là biểu đồ mày cần"
+                except KeyError:
+                        phản_hồi = "Lỗi: Tên cột trong file Excel không đúng (cần cột 'loại tiêu tiền' và 'TIỀN')."
             else:
-        # ép tiền về số
-                df["tiền"] = (
-                    df["tiền"]
-                    .astype(str)
-                    .str.replace(",", "")
-                    .str.replace(".", "")
-                    .str.replace("k", "000", regex=False)
-                )
-
-                df["tiền"] = pd.to_numeric(df["tiền"], errors="coerce")
-                df = df.dropna(subset=["tiền"])
-
-                ax.bar(df["loại tiêu tiền"], df["tiền"])
-                ax.set_title("Biểu đồ loại tiêu tiền")
-
-                phản_hồi_biểu_đồ = fig
-                phản_hồi = "Đây là biểu đồ mày cần"
+                st.write("Dữ liệu trong file đây:")
+                st.dataframe(df)
         else:
-            phản_hồi = "Dữ liệu chi tiêu hiện tại đây:"
-            st.dataframe(df)
-    else:
-        phản_hồi = "Tao không hiểu. Thử hỏi: 'lái xe 20 tuổi', 'bảng cửu chương 9', hoặc 'vẽ biểu đồ' xem, hoặc tao chưa dc lập trình để trả lời câu hỏi đó"
+            phản_hồi = "Tao không hiểu. Thử hỏi: 'lái xe 20 tuổi', 'bảng cửu chương 9', hoặc 'vẽ biểu đồ' xem, hoặc tao chưa dc lập trình để trả lời câu hỏi đó"
     with st.chat_message("assistant"):
         st.markdown(phản_hồi)
         if phản_hồi_biểu_đồ:
@@ -119,9 +98,7 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
     # các câu chư thiết lập
     st.session_state.messages.append({"role": "assistant", "content": phản_hồi})
     if phản_hồi_biểu_đồ:
-
         pass
-
 
 
 
