@@ -107,8 +107,6 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
 
                 phản_hồi_biểu_đồ = fig
                 phản_hồi = "Đây là biểu đồ mày cần"
-            except KeyError:
-                phản_hồi = "Cột Excel cần là: 'loại tiêu tiền' và 'tiền'"
         else:
             phản_hồi = "Dữ liệu chi tiêu hiện tại đây:"
             st.dataframe(df)
@@ -123,6 +121,7 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
     if phản_hồi_biểu_đồ:
 
         pass
+
 
 
 
