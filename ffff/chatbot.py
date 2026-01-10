@@ -2,20 +2,19 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import re
+st.subheader("📂 Dữ liệu chi tiêu")
+
+uploaded_file = st.file_uploader("Upload file Excel", type=["xlsx"])
+
+if uploaded_file is not None:
+    df = pd.read_excel(uploaded_file)
+else:
+    df = None
 # tạo web
 st.set_page_config(page_title = "bờ dồ chét của hưng",layout = "wide")
 st.title("con bot đơn giản")
 #dữ liệu
 info = {"tên":"Dương Quốc Hưng" , "tuổi" : "20" , "nghề nghiệp" : "sinh viên"}
-#tiền
-@st.cache_data 
-def load_data():
-    try :
-        df = pd.read_excel("tiền tiêu vặt.xlsx")
-        return df
-    except:
-        return None
-df = load_data()
 #câu hỏi chính
 if "messages" not in st.session_state:
     st.session_state.messages = [
@@ -92,4 +91,5 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
     # các câu chư thiết lập
     st.session_state.messages.append({"role": "assistant", "content": phản_hồi})
     if phản_hồi_biểu_đồ:
+
         pass
