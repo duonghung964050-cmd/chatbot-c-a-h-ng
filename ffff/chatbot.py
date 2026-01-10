@@ -79,7 +79,22 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
         if "biểu đồ" in low:
             try:
                 fig, ax = plt.subplots()
-                ax.bar(df["loại tiêu tiền"], df["tiền"], color="red")
+                # ép cột tiền về số
+                df["tiền"] = (
+                    
+                    df["tiền"]
+                    .astype(str)
+                    .str.replace(",", "")
+                    .str.replace(".", "")
+                    .str.replace("k", "000", regex=False)
+                )
+
+                df["tiền"] = pd.to_numeric(df["tiền"], errors="coerce")
+
+                df_clean = df.dropna(subset=["tiền"])
+
+                ax.bar(df_clean["loại tiêu tiền"], df_clean["tiền"], color="red")
+
                 ax.set_title("Biểu đồ loại tiêu tiền")
                 phản_hồi_biểu_đồ = fig
                 phản_hồi = "đây là biểu đồ mày cần"
@@ -99,4 +114,5 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
     if phản_hồi_biểu_đồ:
 
         pass
+
 
