@@ -77,11 +77,21 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
     #câu 4
     elif "biểu đồ" in low or "tiền" in low or "excel" in low:
         if "biểu đồ" in low:
-            try:
-                fig, ax = plt.subplots()
-                # ép cột tiền về số
+            fig, ax = plt.subplots()
+
+    # chuẩn hoá tên cột
+            df.columns = df.columns.str.strip().str.lower()
+
+            if "loại tiêu tiền" not in df.columns or "tiền" not in df.columns:
+                phản_hồi = (
+                        " File Excel thiếu cột bắt buộc.\n\n"
+                        "Cần có 2 cột:\n"
+                        "- loại tiêu tiền\n"
+                        "- tiền"
+                )
+            else:
+        # ép tiền về số
                 df["tiền"] = (
-                    
                     df["tiền"]
                     .astype(str)
                     .str.replace(",", "")
@@ -90,14 +100,13 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
                 )
 
                 df["tiền"] = pd.to_numeric(df["tiền"], errors="coerce")
+                df = df.dropna(subset=["tiền"])
 
-                df_clean = df.dropna(subset=["tiền"])
-
-                ax.bar(df_clean["loại tiêu tiền"], df_clean["tiền"], color="red")
-
+                ax.bar(df["loại tiêu tiền"], df["tiền"])
                 ax.set_title("Biểu đồ loại tiêu tiền")
+
                 phản_hồi_biểu_đồ = fig
-                phản_hồi = "đây là biểu đồ mày cần"
+                phản_hồi = "Đây là biểu đồ mày cần"
             except KeyError:
                 phản_hồi = "Cột Excel cần là: 'loại tiêu tiền' và 'tiền'"
         else:
@@ -114,5 +123,6 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
     if phản_hồi_biểu_đồ:
 
         pass
+
 
 
