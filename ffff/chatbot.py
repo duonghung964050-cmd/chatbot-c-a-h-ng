@@ -2,6 +2,13 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import re
+
+data_mau = {
+    "loại tiêu tiền": ["ăn", "đi chơi", "mua đồ","xe cộ","quà","game","cá nhân","sống"],
+    "tiền": [600000, 123454, 900000, 402930, 323232, 453423, 234234, 656565]
+}
+df_default = pd.DataFrame(data_mau)
+
 st.subheader("📂 Dữ liệu chi tiêu")
 
 uploaded_file = st.file_uploader("Upload file Excel", type=["xlsx"])
@@ -68,22 +75,21 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
         else:
             phản_hồi = "nhập đúng cú pháp đi!!! ví dụ: bảng cửu chương 7"
     #câu 4
-    elif "tiền" in low or "excel" in low or "biểu đồ" in low:
-        if df is not None:
-            if "biểu đồ" in low:
-                fig, ax  = plt.subplots()
-                try:
-                    ax.bar(df["loại tiêu tiền"], df ["tiền"],color = "red")
-                    ax.set_title("biểu đồ loại tiêu tiền")
-                    phản_hồi_biểu_đồ = fig
-                    phản_hồi = "đây là biểu đồ mày cần"
-                except KeyError:
-                        phản_hồi = "Lỗi: Tên cột trong file Excel không đúng (cần cột 'loại tiêu tiền' và 'TIỀN')."
-            else:
-                st.write("Dữ liệu trong file đây:")
-                st.dataframe(df)
+    elif "biểu đồ" in low or "tiền" in low or "excel" in low:
+        if "biểu đồ" in low:
+            try:
+                fig, ax = plt.subplots()
+                ax.bar(df["loại tiêu tiền"], df["tiền"], color="red")
+                ax.set_title("Biểu đồ loại tiêu tiền")
+                phản_hồi_biểu_đồ = fig
+                phản_hồi = "đây là biểu đồ mày cần"
+            except KeyError:
+                phản_hồi = "Cột Excel cần là: 'loại tiêu tiền' và 'tiền'"
         else:
-            phản_hồi = "Tao không hiểu. Thử hỏi: 'lái xe 20 tuổi', 'bảng cửu chương 9', hoặc 'vẽ biểu đồ' xem, hoặc tao chưa dc lập trình để trả lời câu hỏi đó"
+            phản_hồi = "Dữ liệu chi tiêu hiện tại đây:"
+            st.dataframe(df)
+    else:
+        phản_hồi = "Tao không hiểu. Thử hỏi: 'lái xe 20 tuổi', 'bảng cửu chương 9', hoặc 'vẽ biểu đồ' xem, hoặc tao chưa dc lập trình để trả lời câu hỏi đó"
     with st.chat_message("assistant"):
         st.markdown(phản_hồi)
         if phản_hồi_biểu_đồ:
@@ -93,3 +99,4 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
     if phản_hồi_biểu_đồ:
 
         pass
+
