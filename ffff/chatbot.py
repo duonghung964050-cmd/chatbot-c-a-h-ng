@@ -9,7 +9,7 @@ data_mau = {
 }
 df_default = pd.DataFrame(data_mau)
 
-st.subheader("📂 Dữ liệu chi tiêu")
+st.subheader(" Dữ liệu chi tiêu")
 
 uploaded_file = st.file_uploader("Upload file Excel", type=["xlsx"])
 
@@ -99,6 +99,7 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
     st.session_state.messages.append({"role": "assistant", "content": phản_hồi})
     if phản_hồi_biểu_đồ:
         pass
+
 
 
 
