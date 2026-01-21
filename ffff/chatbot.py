@@ -71,7 +71,7 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
             n = int(số[0])
             phản_hồi = f"bảng cửu chương{n}\n\n"
             for i in range(1,11):
-                phản_hồi += f"{i}x{n} = {i*n} \n"
+                phản_hồi += f"{i}x{n} = {i*n} \n\n"
         else:
             phản_hồi = "nhập đúng cú pháp đi!!! ví dụ: bảng cửu chương 7"
     #câu 4
@@ -107,6 +107,7 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
     st.session_state.messages.append({"role": "assistant", "content": phản_hồi})
     if phản_hồi_biểu_đồ:
         pass
+
 
 
 
