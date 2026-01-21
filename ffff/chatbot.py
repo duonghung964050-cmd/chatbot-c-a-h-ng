@@ -9,7 +9,7 @@ data_mau = {
 }
 df_default = pd.DataFrame(data_mau)
 
-st.subheader(" Dữ liệu chi tiêu")
+st.subheader("Dữ liệu chi tiêu")
 
 uploaded_file = st.file_uploader("Upload file Excel", type=["xlsx"])
 
@@ -25,7 +25,7 @@ info = {"tên":"Dương Quốc Hưng" , "tuổi" : "20" , "nghề nghiệp" : "s
 #câu hỏi chính
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Chào mày! Tao là bot của hưng, mày muốn hỏi gì? (tao là ai,Lái xe, Bảng cửu chương, hay biểu đồ, loại tiêu tiền?)"}
+        {"role": "assistant", "content": "Chào mày! Tao là bot của hưng, mày muốn hỏi gì? (tao là ai,Lái xe, Bảng cửu chương, hay biểu đồ từ excel, biểu đồ có sẵn, đọc file excel)"}
     ]
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
@@ -75,6 +75,12 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
         else:
             phản_hồi = "nhập đúng cú pháp đi!!! ví dụ: bảng cửu chương 7"
     #câu 4
+    elif"biểu đồ có sẵn" in low:
+        fig, ax  = plt.subplots()
+        ax.bar(df_default["loại tiêu tiền"], df_default ["tiền"],color = "blue")
+        ax.set_title("biểu đồ loại tiêu tiền mẫu")
+        phản_hồi_biểu_đồ = fig
+        phản_hồi = "đây là biểu đồ mẫu"
     elif "tiền" in low or "excel" in low or "biểu đồ" in low:
         if df is not None:
             if "biểu đồ" in low:
@@ -91,6 +97,8 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
                 st.dataframe(df)
         else:
             phản_hồi = "Tao không hiểu. Thử hỏi: 'lái xe 20 tuổi', 'bảng cửu chương 9', hoặc 'vẽ biểu đồ' xem, hoặc tao chưa dc lập trình để trả lời câu hỏi đó"
+    else:
+        phản_hồi = "Tao không hiểu câu hỏi của mày."
     with st.chat_message("assistant"):
         st.markdown(phản_hồi)
         if phản_hồi_biểu_đồ:
@@ -99,6 +107,7 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
     st.session_state.messages.append({"role": "assistant", "content": phản_hồi})
     if phản_hồi_biểu_đồ:
         pass
+
 
 
 
