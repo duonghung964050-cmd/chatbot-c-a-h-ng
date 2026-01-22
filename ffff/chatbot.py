@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import re
-
+#thông tin cảu cột có sẵn
 data_mau = {
     "loại tiêu tiền": ["ăn", "đi chơi", "mua đồ","xe cộ","quà","game","cá nhân","sống"],
     "tiền": [600000, 123454, 900000, 402930, 323232, 453423, 234234, 656565]
@@ -10,7 +10,7 @@ data_mau = {
 df_default = pd.DataFrame(data_mau)
 
 st.subheader("Dữ liệu chi tiêu")
-
+#upload file excel
 uploaded_file = st.file_uploader("Upload file Excel", type=["xlsx"])
 
 if uploaded_file is not None:
@@ -18,14 +18,15 @@ if uploaded_file is not None:
 else:
     df = None
 # tạo web
-st.set_page_config(page_title = "bờ dồ chét của hưng",layout = "wide")
+st.set_page_config(page_title = "bờ dồ chét của hưng",
+                    layout = "wide")
 st.title("con bot đơn giản")
 #dữ liệu
 info = {"tên":"Dương Quốc Hưng" , "tuổi" : "20" , "nghề nghiệp" : "sinh viên"}
 #câu hỏi chính
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Chào mày! Tao là bot của hưng, mày muốn hỏi gì? (tao là ai,Lái xe, Bảng cửu chương, hay biểu đồ từ excel, biểu đồ có sẵn, đọc file excel)"}
+        {"role": "assistant", "content": "Chào mày! Tao là bot của hưng, mày muốn hỏi gì? (tao là ai,Lái xe, Bảng cửu chương, biểu đồ chi tiêu từ excel, biểu đồ chi tiêu có sẵn, đọc file excel chi tiêu)"}
     ]
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
@@ -52,11 +53,11 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
         if số:
             tuổi = int(số[0])
             if 18<= tuổi <90:
-                phản_hồi = f"{tuổi} tuổi thì dc lái xe"
+                phản_hồi = "ok được lái xe"
             elif tuổi >=90:
-                phản_hồi = f"{tuổi}tuổi này cụ nên ở nhà ạ"
+                phản_hồi = "nên để con cháu chở đi cụ"
             else:
-                phản_hồi = f"{tuổi}tuổi này nên ở nhà đi nhóc"
+                phản_hồi = "dell mày"
         else:
             phản_hồi = "mày bao nhieu tuổi? nhập câu như: 18 tuổi lái xe được không"
     #câu 2
@@ -86,7 +87,7 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
             if "biểu đồ" in low:
                 fig, ax  = plt.subplots()
                 try:
-                    ax.bar(df["loại tiêu tiền"], df ["tiền"],color = "red")
+                    ax.bar(df["loại tiêu tiền"], df ["tiền"],color = "pink")
                     ax.set_title("biểu đồ loại tiêu tiền")
                     phản_hồi_biểu_đồ = fig
                     phản_hồi = "đây là biểu đồ mày cần"
@@ -98,7 +99,7 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
         else:
             phản_hồi = "Tao không hiểu. Thử hỏi: 'lái xe 20 tuổi', 'bảng cửu chương 9', hoặc 'vẽ biểu đồ' xem, hoặc tao chưa dc lập trình để trả lời câu hỏi đó"
     else:
-        phản_hồi = "Tao không hiểu câu hỏi của mày."
+        phản_hồi = "Tao không hiểu câu hỏi của mày hoặc hãy nhập đúng cú pháp như ('xx tuổi được lái xe ko', 'bảng cửu chương 9', 'mày là ai', 'vẽ biểu đồ chi tiêu có sẵn', 'vẽ biểu đồ từ excel', 'đọc file excel chi tiêu')"
     with st.chat_message("assistant"):
         st.markdown(phản_hồi)
         if phản_hồi_biểu_đồ:
@@ -107,6 +108,7 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
     st.session_state.messages.append({"role": "assistant", "content": phản_hồi})
     if phản_hồi_biểu_đồ:
         pass
+
 
 
 
