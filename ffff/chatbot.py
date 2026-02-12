@@ -2,6 +2,10 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import re
+# tạo web
+st.set_page_config(page_title = "bờ dồ chét của hưng",
+                    layout = "wide")
+st.title("con bot của hưng")
 #thông tin cảu cột có sẵn
 data_mau = {
     "loại tiêu tiền": ["ăn", "đi chơi", "mua đồ","xe cộ","quà","game","cá nhân","sống"],
@@ -17,10 +21,6 @@ if uploaded_file is not None:
     df = pd.read_excel(uploaded_file)
 else:
     df = None
-# tạo web
-st.set_page_config(page_title = "bờ dồ chét của hưng",
-                    layout = "wide")
-st.title("con bot đơn giản")
 #dữ liệu
 info = {"tên":"Dương Quốc Hưng" , "tuổi" : "20" , "nghề nghiệp" : "sinh viên"}
 #câu hỏi chính
@@ -47,8 +47,11 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
     phản_hồi_biểu_đồ = None
     #chuyển về chững thường
     low = prompt.lower()
+    #câu chào
+    if "hi"in low or "chào" in low or "hello" in low:
+        phản_hồi = "chào mày! tao là bot của hưng, mày muốn hỏi gì? (tao là ai,Lái xe, Bảng cửu chương, biểu đồ chi tiêu từ excel, biểu đồ chi tiêu có sẵn, đọc file excel chi tiêu)"
     #câu 1
-    if "lái xe" in low:
+    elif "lái xe" in low:
         số = re.findall(r'\d+',low)
         if số:
             tuổi = int(số[0])
@@ -82,13 +85,15 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
         ax.set_title("biểu đồ loại tiêu tiền mẫu")
         phản_hồi_biểu_đồ = fig
         phản_hồi = "đây là biểu đồ mẫu"
-    elif "tiền" in low or "excel" in low or "biểu đồ" in low:
+    elif"excel" in low or "biểu đồ" in low:
         if df is not None:
             if "biểu đồ" in low:
                 fig, ax  = plt.subplots()
                 try:
-                    ax.bar(df["loại tiêu tiền"], df ["tiền"],color = "pink")
-                    ax.set_title("biểu đồ loại tiêu tiền")
+                    x_cột = df.columns[0]
+                    y_cột = df.select_dtypes(include=['number']).columns[0]
+                    ax.bar(df[x_cột], df[y_cột],color = "pink")
+                    ax.set_title("biểu đồ file của mày")
                     phản_hồi_biểu_đồ = fig
                     phản_hồi = "đây là biểu đồ mày cần"
                 except KeyError:
@@ -97,7 +102,7 @@ if prompt := st.chat_input('"nhập câu hỏi của mày ở đây'):
                 st.write("Dữ liệu trong file đây:")
                 st.dataframe(df)
         else:
-            phản_hồi = "Tao không hiểu. Thử hỏi: 'lái xe 20 tuổi', 'bảng cửu chương 9', hoặc 'vẽ biểu đồ' xem, hoặc tao chưa dc lập trình để trả lời câu hỏi đó"
+            phản_hồi = "Tao không hiểu. Thử hỏi: 'lái xe 20 tuổi', 'bảng cửu chương 9', hoặc 'vẽ biểu đồ có sẵn, hoặc tao chưa dc lập trình để trả lời câu hỏi đó"
     else:
         phản_hồi = "Tao không hiểu câu hỏi của mày hoặc hãy nhập đúng cú pháp như ('xx tuổi được lái xe ko', 'bảng cửu chương 9', 'mày là ai', 'vẽ biểu đồ chi tiêu có sẵn', 'vẽ biểu đồ từ excel', 'đọc file excel chi tiêu')"
     with st.chat_message("assistant"):
